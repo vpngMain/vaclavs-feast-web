@@ -9,9 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SluzbyRouteImport } from './routes/sluzby'
 import { Route as ONasRouteImport } from './routes/o-nas'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SluzbyRoute = SluzbyRouteImport.update({
+  id: '/sluzby',
+  path: '/sluzby',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ONasRoute = ONasRouteImport.update({
   id: '/o-nas',
   path: '/o-nas',
@@ -26,31 +32,42 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/o-nas': typeof ONasRoute
+  '/sluzby': typeof SluzbyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/o-nas': typeof ONasRoute
+  '/sluzby': typeof SluzbyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/o-nas': typeof ONasRoute
+  '/sluzby': typeof SluzbyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/o-nas'
+  fullPaths: '/' | '/o-nas' | '/sluzby'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/o-nas'
-  id: '__root__' | '/' | '/o-nas'
+  to: '/' | '/o-nas' | '/sluzby'
+  id: '__root__' | '/' | '/o-nas' | '/sluzby'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ONasRoute: typeof ONasRoute
+  SluzbyRoute: typeof SluzbyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sluzby': {
+      id: '/sluzby'
+      path: '/sluzby'
+      fullPath: '/sluzby'
+      preLoaderRoute: typeof SluzbyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/o-nas': {
       id: '/o-nas'
       path: '/o-nas'
@@ -71,6 +88,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ONasRoute: ONasRoute,
+  SluzbyRoute: SluzbyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
