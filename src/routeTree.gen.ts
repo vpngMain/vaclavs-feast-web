@@ -13,6 +13,7 @@ import { Route as SluzbyRouteImport } from './routes/sluzby'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ONasRouteImport } from './routes/o-nas'
 import { Route as KontaktRouteImport } from './routes/kontakt'
+import { Route as JidlaRouteImport } from './routes/jidla'
 import { Route as GalerieRouteImport } from './routes/galerie'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -36,6 +37,11 @@ const KontaktRoute = KontaktRouteImport.update({
   path: '/kontakt',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JidlaRoute = JidlaRouteImport.update({
+  id: '/jidla',
+  path: '/jidla',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GalerieRoute = GalerieRouteImport.update({
   id: '/galerie',
   path: '/galerie',
@@ -50,6 +56,7 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/galerie': typeof GalerieRoute
+  '/jidla': typeof JidlaRoute
   '/kontakt': typeof KontaktRoute
   '/o-nas': typeof ONasRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/galerie': typeof GalerieRoute
+  '/jidla': typeof JidlaRoute
   '/kontakt': typeof KontaktRoute
   '/o-nas': typeof ONasRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/galerie': typeof GalerieRoute
+  '/jidla': typeof JidlaRoute
   '/kontakt': typeof KontaktRoute
   '/o-nas': typeof ONasRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -77,16 +86,25 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/galerie'
+    | '/jidla'
     | '/kontakt'
     | '/o-nas'
     | '/sitemap.xml'
     | '/sluzby'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/galerie' | '/kontakt' | '/o-nas' | '/sitemap.xml' | '/sluzby'
+  to:
+    | '/'
+    | '/galerie'
+    | '/jidla'
+    | '/kontakt'
+    | '/o-nas'
+    | '/sitemap.xml'
+    | '/sluzby'
   id:
     | '__root__'
     | '/'
     | '/galerie'
+    | '/jidla'
     | '/kontakt'
     | '/o-nas'
     | '/sitemap.xml'
@@ -96,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GalerieRoute: typeof GalerieRoute
+  JidlaRoute: typeof JidlaRoute
   KontaktRoute: typeof KontaktRoute
   ONasRoute: typeof ONasRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -132,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KontaktRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/jidla': {
+      id: '/jidla'
+      path: '/jidla'
+      fullPath: '/jidla'
+      preLoaderRoute: typeof JidlaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/galerie': {
       id: '/galerie'
       path: '/galerie'
@@ -152,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GalerieRoute: GalerieRoute,
+  JidlaRoute: JidlaRoute,
   KontaktRoute: KontaktRoute,
   ONasRoute: ONasRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
