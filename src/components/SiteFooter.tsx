@@ -35,6 +35,7 @@ export function SiteFooter() {
           </p>
           <Link to="/o-nas" className="block hover:text-accent">O nás</Link>
           <Link to="/jidla" className="block hover:text-accent">Naše jídla</Link>
+          <Link to="/menu" className="block hover:text-accent">Jídelní lístek</Link>
           <Link to="/sluzby" className="block hover:text-accent">Služby</Link>
           <Link to="/galerie" className="block hover:text-accent">Galerie</Link>
           <Link to="/kontakt" className="block hover:text-accent">Kontakt</Link>

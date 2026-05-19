@@ -6,6 +6,7 @@ const links = [
   { to: "/", label: "Úvod" },
   { to: "/o-nas", label: "O nás" },
   { to: "/jidla", label: "Naše jídla" },
+  { to: "/menu", label: "Jídelní lístek" },
   { to: "/sluzby", label: "Služby" },
   { to: "/galerie", label: "Galerie" },
   { to: "/kontakt", label: "Kontakt" },

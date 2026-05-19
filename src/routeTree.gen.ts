@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SluzbyRouteImport } from './routes/sluzby'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ONasRouteImport } from './routes/o-nas'
+import { Route as MenuRouteImport } from './routes/menu'
 import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as JidlaRouteImport } from './routes/jidla'
 import { Route as GalerieRouteImport } from './routes/galerie'
@@ -30,6 +31,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ONasRoute = ONasRouteImport.update({
   id: '/o-nas',
   path: '/o-nas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MenuRoute = MenuRouteImport.update({
+  id: '/menu',
+  path: '/menu',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KontaktRoute = KontaktRouteImport.update({
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/galerie': typeof GalerieRoute
   '/jidla': typeof JidlaRoute
   '/kontakt': typeof KontaktRoute
+  '/menu': typeof MenuRoute
   '/o-nas': typeof ONasRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sluzby': typeof SluzbyRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/galerie': typeof GalerieRoute
   '/jidla': typeof JidlaRoute
   '/kontakt': typeof KontaktRoute
+  '/menu': typeof MenuRoute
   '/o-nas': typeof ONasRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sluzby': typeof SluzbyRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/galerie': typeof GalerieRoute
   '/jidla': typeof JidlaRoute
   '/kontakt': typeof KontaktRoute
+  '/menu': typeof MenuRoute
   '/o-nas': typeof ONasRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sluzby': typeof SluzbyRoute
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/galerie'
     | '/jidla'
     | '/kontakt'
+    | '/menu'
     | '/o-nas'
     | '/sitemap.xml'
     | '/sluzby'
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/galerie'
     | '/jidla'
     | '/kontakt'
+    | '/menu'
     | '/o-nas'
     | '/sitemap.xml'
     | '/sluzby'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/galerie'
     | '/jidla'
     | '/kontakt'
+    | '/menu'
     | '/o-nas'
     | '/sitemap.xml'
     | '/sluzby'
@@ -116,6 +128,7 @@ export interface RootRouteChildren {
   GalerieRoute: typeof GalerieRoute
   JidlaRoute: typeof JidlaRoute
   KontaktRoute: typeof KontaktRoute
+  MenuRoute: typeof MenuRoute
   ONasRoute: typeof ONasRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SluzbyRoute: typeof SluzbyRoute
@@ -142,6 +155,13 @@ declare module '@tanstack/react-router' {
       path: '/o-nas'
       fullPath: '/o-nas'
       preLoaderRoute: typeof ONasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/menu': {
+      id: '/menu'
+      path: '/menu'
+      fullPath: '/menu'
+      preLoaderRoute: typeof MenuRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/kontakt': {
@@ -180,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   GalerieRoute: GalerieRoute,
   JidlaRoute: JidlaRoute,
   KontaktRoute: KontaktRoute,
+  MenuRoute: MenuRoute,
   ONasRoute: ONasRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SluzbyRoute: SluzbyRoute,
@@ -187,3 +208,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
