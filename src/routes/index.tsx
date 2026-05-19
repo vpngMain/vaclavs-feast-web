@@ -245,10 +245,15 @@ function Index() {
               {stats.ratingLabel} · {stats.reviewLabel}
             </p>
           </div>
+          {reviews.length === 0 && (
+            <p className="text-center text-sm text-primary-foreground/60">
+              Načítáme nejnovější recenze z Google…
+            </p>
+          )}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {reviews.map((r) => (
+            {reviews.slice(0, 4).map((r) => (
               <figure
-                key={r.author}
+                key={r.id}
                 className="flex h-full flex-col rounded-sm border border-primary-foreground/10 bg-primary-foreground/5 p-6 backdrop-blur"
               >
                 <div className="flex items-center gap-1 text-accent">
@@ -267,7 +272,7 @@ function Index() {
                   <span className="block font-medium text-primary-foreground">
                     {r.author}
                   </span>
-                  <span>{r.time} · Google</span>
+                  <span>{r.relativeTime} · Google</span>
                 </figcaption>
               </figure>
             ))}
