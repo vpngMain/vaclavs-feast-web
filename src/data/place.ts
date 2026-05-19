@@ -86,46 +86,6 @@ export const dishes = [
   },
 ];
 
-export type Review = {
-  rating: number;
-  author: string;
-  photo: string | null;
-  time: string;
-  text: string;
-};
-
-// Recenze přeložené do češtiny pro hosty (původně z Google reviews).
-export const reviews: Review[] = [
-  {
-    rating: 5,
-    author: "kevin4r",
-    photo: null,
-    time: "před 2 lety",
-    text: "Skvělé jídlo za příznivé ceny! Opravdu příjemné překvapení.",
-  },
-  {
-    rating: 5,
-    author: "Get fit with Sensei Ram",
-    photo: null,
-    time: "před 4 lety",
-    text: "Velmi chutné jídlo za rozumnou cenu. Přátelští lidé. Atmosféra přívětivá i ke psům.",
-  },
-  {
-    rating: 5,
-    author: "Laird Thieme",
-    photo: null,
-    time: "před rokem",
-    text: "Dobré jídlo a vynikající personál. Doporučuji všem návštěvníkům Krupky.",
-  },
-  {
-    rating: 4,
-    author: "REDTT59",
-    photo: null,
-    time: "před 3 lety",
-    text: "Lokální restaurace s venkovním posezením. Byli jsme překvapeni, jak plno bylo — přesto rychlá obsluha, výborné jídlo a neuvěřitelně nízké ceny.",
-  },
-];
-
 export const stats = {
   ratingLabel: "4,5 / 5 hvězdiček na Google",
   reviewLabel: "Více než 1 100 recenzí",
