@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ONasRouteImport } from './routes/o-nas'
 import { Route as GalerieRouteImport } from './routes/galerie'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ONasRoute = ONasRouteImport.update({
+  id: '/o-nas',
+  path: '/o-nas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalerieRoute = GalerieRouteImport.update({
@@ -32,30 +38,34 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/galerie': typeof GalerieRoute
+  '/o-nas': typeof ONasRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/galerie': typeof GalerieRoute
+  '/o-nas': typeof ONasRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/galerie': typeof GalerieRoute
+  '/o-nas': typeof ONasRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/galerie' | '/sitemap.xml'
+  fullPaths: '/' | '/galerie' | '/o-nas' | '/sitemap.xml'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/galerie' | '/sitemap.xml'
-  id: '__root__' | '/' | '/galerie' | '/sitemap.xml'
+  to: '/' | '/galerie' | '/o-nas' | '/sitemap.xml'
+  id: '__root__' | '/' | '/galerie' | '/o-nas' | '/sitemap.xml'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GalerieRoute: typeof GalerieRoute
+  ONasRoute: typeof ONasRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/o-nas': {
+      id: '/o-nas'
+      path: '/o-nas'
+      fullPath: '/o-nas'
+      preLoaderRoute: typeof ONasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/galerie': {
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GalerieRoute: GalerieRoute,
+  ONasRoute: ONasRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
