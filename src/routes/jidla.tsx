@@ -7,6 +7,35 @@ export const Route = createFileRoute("/jidla")({
     meta: [
       { title: "Naše jídla — Restaurace U Václava, Krupka" },
       { name: "description", content: "Ukázka jídel z naší kuchyně: vepřová pečeně, řízek, hovězí na divoko, drůbeží játra a další česká klasika." },
+      { property: "og:title", content: "Naše jídla — Restaurace U Václava, Krupka" },
+      { property: "og:description", content: "Poctivá česká klasika: svíčková, řízek, koleno, hovězí na divoko a čepované pivo Březňák." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://vaclavs-feast-web.lovable.app/jidla" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Naše jídla — Restaurace U Václava" },
+      { name: "twitter:description", content: "Poctivá česká klasika a čepované pivo Březňák v Krupce." },
+      { name: "keywords", content: "restaurace Krupka, česká kuchyně, jídelní lístek, svíčková, řízek, koleno, Březňák, U Václava" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://vaclavs-feast-web.lovable.app/jidla" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Menu",
+          name: "Jídelní lístek — Restaurace U Václava",
+          inLanguage: "cs",
+          provider: {
+            "@type": "Restaurant",
+            name: "Restaurace U Václava",
+            address: "Revoluční 16, Unčín, 417 42 Krupka",
+            telephone: "+420417861700",
+            servesCuisine: "Czech",
+          },
+        }),
+      },
     ],
   }),
   component: JidlaPage,
