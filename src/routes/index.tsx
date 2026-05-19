@@ -37,6 +37,13 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const fetchReviews = useServerFn(getGoogleReviews);
+  const { data: reviewsData } = useQuery({
+    queryKey: ["google-reviews"],
+    queryFn: () => fetchReviews(),
+    staleTime: 1000 * 60 * 30,
+  });
+  const reviews = reviewsData?.reviews ?? [];
   return (
     <div>
       {/* HERO */}
