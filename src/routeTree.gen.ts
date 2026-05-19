@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SluzbyRouteImport } from './routes/sluzby'
 import { Route as ONasRouteImport } from './routes/o-nas'
+import { Route as GalerieRouteImport } from './routes/galerie'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SluzbyRoute = SluzbyRouteImport.update({
@@ -23,6 +24,11 @@ const ONasRoute = ONasRouteImport.update({
   path: '/o-nas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GalerieRoute = GalerieRouteImport.update({
+  id: '/galerie',
+  path: '/galerie',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -31,30 +37,34 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/galerie': typeof GalerieRoute
   '/o-nas': typeof ONasRoute
   '/sluzby': typeof SluzbyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/galerie': typeof GalerieRoute
   '/o-nas': typeof ONasRoute
   '/sluzby': typeof SluzbyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/galerie': typeof GalerieRoute
   '/o-nas': typeof ONasRoute
   '/sluzby': typeof SluzbyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/o-nas' | '/sluzby'
+  fullPaths: '/' | '/galerie' | '/o-nas' | '/sluzby'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/o-nas' | '/sluzby'
-  id: '__root__' | '/' | '/o-nas' | '/sluzby'
+  to: '/' | '/galerie' | '/o-nas' | '/sluzby'
+  id: '__root__' | '/' | '/galerie' | '/o-nas' | '/sluzby'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GalerieRoute: typeof GalerieRoute
   ONasRoute: typeof ONasRoute
   SluzbyRoute: typeof SluzbyRoute
 }
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ONasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/galerie': {
+      id: '/galerie'
+      path: '/galerie'
+      fullPath: '/galerie'
+      preLoaderRoute: typeof GalerieRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GalerieRoute: GalerieRoute,
   ONasRoute: ONasRoute,
   SluzbyRoute: SluzbyRoute,
 }
