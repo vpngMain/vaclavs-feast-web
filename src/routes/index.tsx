@@ -38,12 +38,12 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const fetchReviews = useServerFn(getGoogleReviews);
-  const { data: reviewsData } = useQuery({
+  const { data: reviewsData, isLoading } = useQuery({
     queryKey: ["google-reviews"],
     queryFn: () => fetchReviews(),
     staleTime: 1000 * 60 * 30,
   });
-  const reviews = reviewsData?.reviews ?? [];
+  const reviewSlots = Array.from({ length: 4 }, (_, i) => reviewsData?.reviews[i] ?? null);
   return (
     <div>
       {/* HERO */}
@@ -245,35 +245,53 @@ function Index() {
               {stats.ratingLabel} · {stats.reviewLabel}
             </p>
           </div>
-          {reviews.length === 0 && (
+          {isLoading && (
             <p className="text-center text-sm text-primary-foreground/60">
               Načítáme nejnovější recenze z Google…
             </p>
           )}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {reviews.slice(0, 4).map((r) => (
+            {reviewSlots.map((r, index) => (
               <figure
-                key={r.id}
+                key={r?.id ?? `review-slot-${index}`}
                 className="flex h-full flex-col rounded-sm border border-primary-foreground/10 bg-primary-foreground/5 p-6 backdrop-blur"
               >
-                <div className="flex items-center gap-1 text-accent">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className="h-4 w-4"
-                      fill={i < r.rating ? "currentColor" : "none"}
-                    />
-                  ))}
-                </div>
-                <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-primary-foreground/90">
-                  &ldquo;{r.text}&rdquo;
-                </blockquote>
-                <figcaption className="mt-5 border-t border-primary-foreground/10 pt-4 text-xs text-primary-foreground/70">
-                  <span className="block font-medium text-primary-foreground">
-                    {r.author}
-                  </span>
-                  <span>{r.relativeTime} · Google</span>
-                </figcaption>
+                {r ? (
+                  <>
+                    <div className="flex items-center gap-1 text-accent">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star
+                          key={i}
+                          className="h-4 w-4"
+                          fill={i < r.rating ? "currentColor" : "none"}
+                        />
+                      ))}
+                    </div>
+                    <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-primary-foreground/90">
+                      &ldquo;{r.text}&rdquo;
+                    </blockquote>
+                    <figcaption className="mt-5 border-t border-primary-foreground/10 pt-4 text-xs text-primary-foreground/70">
+                      <span className="block font-medium text-primary-foreground">
+                        {r.author}
+                      </span>
+                      <span>{r.relativeTime} · Google</span>
+                    </figcaption>
+                  </>
+                ) : (
+                  <div className="flex h-full min-h-56 flex-col justify-between text-sm text-primary-foreground/65">
+                    <div className="flex items-center gap-1 text-accent/60">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Star key={i} className="h-4 w-4" fill="currentColor" />
+                      ))}
+                    </div>
+                    <p className="leading-relaxed">
+                      Nejnovější ověřené recenze se načítají přímo z Google.
+                    </p>
+                    <span className="border-t border-primary-foreground/10 pt-4 text-xs">
+                      Google recenze
+                    </span>
+                  </div>
+                )}
               </figure>
             ))}
           </div>
