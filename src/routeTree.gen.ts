@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SluzbyRouteImport } from './routes/sluzby'
 import { Route as ONasRouteImport } from './routes/o-nas'
+import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as GalerieRouteImport } from './routes/galerie'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -22,6 +23,11 @@ const SluzbyRoute = SluzbyRouteImport.update({
 const ONasRoute = ONasRouteImport.update({
   id: '/o-nas',
   path: '/o-nas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KontaktRoute = KontaktRouteImport.update({
+  id: '/kontakt',
+  path: '/kontakt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GalerieRoute = GalerieRouteImport.update({
@@ -38,12 +44,14 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/galerie': typeof GalerieRoute
+  '/kontakt': typeof KontaktRoute
   '/o-nas': typeof ONasRoute
   '/sluzby': typeof SluzbyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/galerie': typeof GalerieRoute
+  '/kontakt': typeof KontaktRoute
   '/o-nas': typeof ONasRoute
   '/sluzby': typeof SluzbyRoute
 }
@@ -51,20 +59,22 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/galerie': typeof GalerieRoute
+  '/kontakt': typeof KontaktRoute
   '/o-nas': typeof ONasRoute
   '/sluzby': typeof SluzbyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/galerie' | '/o-nas' | '/sluzby'
+  fullPaths: '/' | '/galerie' | '/kontakt' | '/o-nas' | '/sluzby'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/galerie' | '/o-nas' | '/sluzby'
-  id: '__root__' | '/' | '/galerie' | '/o-nas' | '/sluzby'
+  to: '/' | '/galerie' | '/kontakt' | '/o-nas' | '/sluzby'
+  id: '__root__' | '/' | '/galerie' | '/kontakt' | '/o-nas' | '/sluzby'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GalerieRoute: typeof GalerieRoute
+  KontaktRoute: typeof KontaktRoute
   ONasRoute: typeof ONasRoute
   SluzbyRoute: typeof SluzbyRoute
 }
@@ -83,6 +93,13 @@ declare module '@tanstack/react-router' {
       path: '/o-nas'
       fullPath: '/o-nas'
       preLoaderRoute: typeof ONasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kontakt': {
+      id: '/kontakt'
+      path: '/kontakt'
+      fullPath: '/kontakt'
+      preLoaderRoute: typeof KontaktRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/galerie': {
@@ -105,6 +122,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GalerieRoute: GalerieRoute,
+  KontaktRoute: KontaktRoute,
   ONasRoute: ONasRoute,
   SluzbyRoute: SluzbyRoute,
 }
