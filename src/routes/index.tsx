@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import {
   Wifi,
   Users,
@@ -11,7 +13,8 @@ import {
   CigaretteOff,
   Clock,
 } from "lucide-react";
-import { photos, dishes, reviews, place, stats } from "@/data/place";
+import { photos, dishes, place, stats } from "@/data/place";
+import { getGoogleReviews } from "@/lib/reviews.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
