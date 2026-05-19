@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SluzbyRouteImport } from './routes/sluzby'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ONasRouteImport } from './routes/o-nas'
 import { Route as KontaktRouteImport } from './routes/kontakt'
 import { Route as GalerieRouteImport } from './routes/galerie'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const SluzbyRoute = SluzbyRouteImport.update({
   id: '/sluzby',
   path: '/sluzby',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ONasRoute = ONasRouteImport.update({
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/galerie': typeof GalerieRoute
   '/kontakt': typeof KontaktRoute
   '/o-nas': typeof ONasRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sluzby': typeof SluzbyRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/galerie': typeof GalerieRoute
   '/kontakt': typeof KontaktRoute
   '/o-nas': typeof ONasRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sluzby': typeof SluzbyRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,28 @@ export interface FileRoutesById {
   '/galerie': typeof GalerieRoute
   '/kontakt': typeof KontaktRoute
   '/o-nas': typeof ONasRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/sluzby': typeof SluzbyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/galerie' | '/kontakt' | '/o-nas' | '/sluzby'
+  fullPaths:
+    | '/'
+    | '/galerie'
+    | '/kontakt'
+    | '/o-nas'
+    | '/sitemap.xml'
+    | '/sluzby'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/galerie' | '/kontakt' | '/o-nas' | '/sluzby'
-  id: '__root__' | '/' | '/galerie' | '/kontakt' | '/o-nas' | '/sluzby'
+  to: '/' | '/galerie' | '/kontakt' | '/o-nas' | '/sitemap.xml' | '/sluzby'
+  id:
+    | '__root__'
+    | '/'
+    | '/galerie'
+    | '/kontakt'
+    | '/o-nas'
+    | '/sitemap.xml'
+    | '/sluzby'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +98,7 @@ export interface RootRouteChildren {
   GalerieRoute: typeof GalerieRoute
   KontaktRoute: typeof KontaktRoute
   ONasRoute: typeof ONasRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SluzbyRoute: typeof SluzbyRoute
 }
 
@@ -86,6 +109,13 @@ declare module '@tanstack/react-router' {
       path: '/sluzby'
       fullPath: '/sluzby'
       preLoaderRoute: typeof SluzbyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/o-nas': {
@@ -124,8 +154,19 @@ const rootRouteChildren: RootRouteChildren = {
   GalerieRoute: GalerieRoute,
   KontaktRoute: KontaktRoute,
   ONasRoute: ONasRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SluzbyRoute: SluzbyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
