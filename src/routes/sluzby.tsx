@@ -30,8 +30,6 @@ const services = [
   { icon: Car, title: "Parkoviště", desc: "Vlastní parkování přímo u restaurace." },
 ];
 
-export default SluzbyPage;
-
 function SluzbyPage() {
   return (
     <div>
