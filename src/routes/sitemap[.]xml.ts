@@ -7,6 +7,7 @@ const entries = [
   { path: "/", priority: "1.0" },
   { path: "/o-nas", priority: "0.8" },
   { path: "/sluzby", priority: "0.8" },
+  { path: "/jidla", priority: "0.9" },
   { path: "/galerie", priority: "0.6" },
   { path: "/kontakt", priority: "0.8" },
 ];
