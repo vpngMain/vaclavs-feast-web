@@ -17,16 +17,16 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">Stránka nenalezena</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          Tato stránka neexistuje nebo byla přesunuta.
         </p>
         <div className="mt-6">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
+            Zpět na úvod
           </Link>
         </div>
       </div>
@@ -42,10 +42,10 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          Stránka se nenačetla
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          Něco se pokazilo. Zkuste obnovit stránku nebo se vraťte na úvod.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
@@ -55,13 +55,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            Zkusit znovu
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            Zpět na úvod
           </a>
         </div>
       </div>
@@ -89,11 +89,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:title", content: "Restaurace U Václava — Krupka" },
-      { name: "description", content: "U Vaclava's Makeover is a professional website redesign for a restaurant, enhancing its visual appeal and functionality." },
-      { property: "og:description", content: "U Vaclava's Makeover is a professional website redesign for a restaurant, enhancing its visual appeal and functionality." },
-      { name: "twitter:description", content: "U Vaclava's Makeover is a professional website redesign for a restaurant, enhancing its visual appeal and functionality." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a8a12407-725d-446a-9f13-4941a1954e9d/id-preview-6b841ffd--eb5ba4fd-3da4-45cf-a07e-dc72239f1dd9.lovable.app-1779210649222.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a8a12407-725d-446a-9f13-4941a1954e9d/id-preview-6b841ffd--eb5ba4fd-3da4-45cf-a07e-dc72239f1dd9.lovable.app-1779210649222.png" },
+      {
+        name: "twitter:description",
+        content: "Poctivá česká kuchyně a čepované pivo v Krupce.",
+      },
     ],
     links: [
       {
@@ -110,7 +109,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="cs">
       <head>
         <HeadContent />
       </head>

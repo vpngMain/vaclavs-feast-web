@@ -10,14 +10,14 @@ export const Route = createFileRoute("/jidla")({
       { property: "og:title", content: "Naše jídla — Restaurace U Václava, Krupka" },
       { property: "og:description", content: "Poctivá česká klasika: svíčková, řízek, koleno, hovězí na divoko a čepované pivo Březňák." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://vaclavs-feast-web.lovable.app/jidla" },
+      { property: "og:url", content: "https://vaclavs-feast-web.vercel.app/jidla" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Naše jídla — Restaurace U Václava" },
       { name: "twitter:description", content: "Poctivá česká klasika a čepované pivo Březňák v Krupce." },
       { name: "keywords", content: "restaurace Krupka, česká kuchyně, jídelní lístek, svíčková, řízek, koleno, Březňák, U Václava" },
     ],
     links: [
-      { rel: "canonical", href: "https://vaclavs-feast-web.lovable.app/jidla" },
+      { rel: "canonical", href: "https://vaclavs-feast-web.vercel.app/jidla" },
     ],
     scripts: [
       {

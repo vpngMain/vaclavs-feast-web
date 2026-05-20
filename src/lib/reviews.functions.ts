@@ -12,24 +12,10 @@ export type GoogleReview = {
 };
 
 const PLACE_ID = "ChIJ1Y7NpCmQCUcRHzAsci1xVHI";
-const GATEWAY_URL = "https://connector-gateway.lovable.dev/google_maps";
+const PLACES_API_URL = "https://maps.googleapis.com/maps/api/place/details/json";
 const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 const MIN_RATING = 4.5;
 const REVIEW_LIMIT = 4;
-
-type NewPlacesReview = {
-  name: string;
-  rating: number;
-  publishTime: string;
-  relativePublishTimeDescription: string;
-  text?: { text: string };
-  originalText?: { text: string };
-  authorAttribution?: {
-    displayName?: string;
-    photoUri?: string;
-    uri?: string;
-  };
-};
 
 type LegacyPlacesReview = {
   author_name?: string;
@@ -57,77 +43,47 @@ function filterAndLimitReviews(reviews: GoogleReview[]) {
 
 export const getGoogleReviews = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ reviews: GoogleReview[]; error: string | null }> => {
-    const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;
-    const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
-    if (!LOVABLE_API_KEY || !GOOGLE_MAPS_API_KEY) {
-      return { reviews: [], error: "Google Maps connector not configured" };
+    const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+    if (!apiKey) {
+      return { reviews: [], error: "GOOGLE_MAPS_API_KEY not configured" };
     }
 
     try {
-      const legacyRes = await fetch(
-        `${GATEWAY_URL}/maps/api/place/details/json?place_id=${PLACE_ID}&language=cs&fields=reviews&reviews_sort=newest`,
-        {
-          headers: {
-            Authorization: `Bearer ${LOVABLE_API_KEY}`,
-            "X-Connection-Api-Key": GOOGLE_MAPS_API_KEY,
-          },
-        },
-      );
-      if (legacyRes.ok) {
-        const legacyData = (await legacyRes.json()) as {
-          status?: string;
-          error_message?: string;
-          result?: { reviews?: LegacyPlacesReview[] };
-        };
+      const url = new URL(PLACES_API_URL);
+      url.searchParams.set("place_id", PLACE_ID);
+      url.searchParams.set("language", "cs");
+      url.searchParams.set("fields", "reviews");
+      url.searchParams.set("reviews_sort", "newest");
+      url.searchParams.set("key", apiKey);
 
-        if (legacyData.status === "OK") {
-          const reviews = filterAndLimitReviews(
-            (legacyData.result?.reviews ?? []).map((r) => ({
-              id: `${r.author_name ?? "google"}-${r.time}`,
-              rating: r.rating,
-              text: r.text ?? "",
-              author: r.author_name ?? "Host Google",
-              authorPhoto: r.profile_photo_url ?? null,
-              authorUri: r.author_url ?? null,
-              relativeTime: r.relative_time_description ?? "",
-              publishTime: new Date(r.time * 1000).toISOString(),
-            })),
-          );
-
-          return { reviews, error: null };
-        }
-      }
-
-      const res = await fetch(
-        `${GATEWAY_URL}/places/v1/places/${PLACE_ID}?languageCode=cs`,
-        {
-          headers: {
-            Authorization: `Bearer ${LOVABLE_API_KEY}`,
-            "X-Connection-Api-Key": GOOGLE_MAPS_API_KEY,
-            "X-Goog-FieldMask": "reviews",
-          },
-        },
-      );
+      const res = await fetch(url.toString());
       if (!res.ok) {
-        return {
-          reviews: [],
-          error: `Places API ${res.status}`,
-        };
+        return { reviews: [], error: `Places API ${res.status}` };
       }
+
       const data = (await res.json()) as {
-        reviews?: NewPlacesReview[];
+        status?: string;
+        error_message?: string;
+        result?: { reviews?: LegacyPlacesReview[] };
       };
 
+      if (data.status !== "OK") {
+        return {
+          reviews: [],
+          error: data.error_message ?? `Places API status: ${data.status}`,
+        };
+      }
+
       const reviews = filterAndLimitReviews(
-        (data.reviews ?? []).map((r) => ({
-          id: r.name,
+        (data.result?.reviews ?? []).map((r) => ({
+          id: `${r.author_name ?? "google"}-${r.time}`,
           rating: r.rating,
-          text: r.text?.text ?? r.originalText?.text ?? "",
-          author: r.authorAttribution?.displayName ?? "Host Google",
-          authorPhoto: r.authorAttribution?.photoUri ?? null,
-          authorUri: r.authorAttribution?.uri ?? null,
-          relativeTime: r.relativePublishTimeDescription,
-          publishTime: r.publishTime,
+          text: r.text ?? "",
+          author: r.author_name ?? "Host Google",
+          authorPhoto: r.profile_photo_url ?? null,
+          authorUri: r.author_url ?? null,
+          relativeTime: r.relative_time_description ?? "",
+          publishTime: new Date(r.time * 1000).toISOString(),
         })),
       );
 
