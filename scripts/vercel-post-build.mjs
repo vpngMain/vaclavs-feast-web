@@ -8,7 +8,7 @@
  *   config.json                          routing rules
  *   static/                              static assets (served by Vercel CDN)
  *   functions/ssr.func/.vc-config.json  Node.js function config
- *   functions/ssr.func/index.js         bundled SSR handler + Node.js adapter
+ *   functions/ssr.func/index.js         CJS entry (adapter + bundled handler)
  */
 
 import { cp, mkdir, writeFile, rm } from "node:fs/promises";
@@ -23,15 +23,32 @@ const OUT = resolve(root, ".vercel/output");
 const STATIC = resolve(OUT, "static");
 const FUNC = resolve(OUT, "functions/ssr.func");
 
-// Node.js adapter: wraps the Web Fetch API handler for Vercel Node.js functions
-const ADAPTER = /* js */ `
-import handler from './_handler.js';
+async function run() {
+  // 1. Clean and recreate output dirs
+  await rm(OUT, { recursive: true, force: true });
+  await mkdir(STATIC, { recursive: true });
+  await mkdir(FUNC, { recursive: true });
+
+  // 2. Copy static client assets
+  await cp(resolve(root, "dist/client"), STATIC, { recursive: true });
+  console.log("✓ copied dist/client → .vercel/output/static");
+
+  // 3. Bundle everything into a single CJS file.
+  //    CJS format avoids ESM/CJS interop issues with packages that use
+  //    dynamic require() internally (use-sync-external-store, react, etc).
+  //    The Node.js adapter is inlined via stdin so esbuild handles it all.
+  const adapterSrc = `
+import { createRequire } from 'node:module';
 import { Readable } from 'node:stream';
+
+const require = createRequire(import.meta.url);
+const handler = require('./_handler.cjs');
+const fetchFn = handler.default?.fetch ?? handler.fetch ?? handler.default;
 
 export default async function(req, res) {
   const protocol = req.headers['x-forwarded-proto'] || 'https';
   const host = req.headers['x-forwarded-host'] || req.headers['host'] || 'localhost';
-  const url = new URL(req.url, \`\${protocol}://\${host}\`);
+  const url = new URL(req.url, protocol + '://' + host);
 
   const headers = new Headers();
   for (const [k, v] of Object.entries(req.headers)) {
@@ -47,11 +64,10 @@ export default async function(req, res) {
     method: req.method,
     headers,
     body,
-    // @ts-ignore
     duplex: 'half',
   });
 
-  const webRes = await handler.fetch(webReq, {}, { waitUntil: () => {} });
+  const webRes = await fetchFn(webReq, {}, { waitUntil: () => {} });
 
   res.statusCode = webRes.status;
   webRes.headers.forEach((v, k) => res.setHeader(k, v));
@@ -59,39 +75,28 @@ export default async function(req, res) {
   const buf = await webRes.arrayBuffer();
   res.end(Buffer.from(buf));
 }
-`;
+`.trim();
 
-async function run() {
-  // 1. Clean and recreate output dirs
-  await rm(OUT, { recursive: true, force: true });
-  await mkdir(STATIC, { recursive: true });
-  await mkdir(FUNC, { recursive: true });
-
-  // 2. Copy static client assets
-  await cp(resolve(root, "dist/client"), STATIC, { recursive: true });
-  console.log("✓ copied dist/client → .vercel/output/static");
-
-  // 3. Bundle server entry as Node.js
+  // 3a. Bundle the TanStack Start server handler as CJS
   await build({
     entryPoints: [resolve(root, "dist/server/server.js")],
     bundle: true,
-    format: "esm",
+    format: "cjs",
     platform: "node",
     target: "node20",
-    outfile: resolve(FUNC, "_handler.js"),
-    external: ["react", "react-dom"],
+    outfile: resolve(FUNC, "_handler.cjs"),
     minify: false,
     define: {
       "process.env.NODE_ENV": '"production"',
     },
   });
-  console.log("✓ bundled server.js → _handler.js");
+  console.log("✓ bundled server.js → _handler.cjs");
 
-  // 4. Write Node.js adapter entry
-  await writeFile(resolve(FUNC, "index.js"), ADAPTER.trim());
-  console.log("✓ wrote Node.js adapter → index.js");
+  // 3b. Write the CJS adapter entry
+  await writeFile(resolve(FUNC, "index.js"), adapterSrc);
+  console.log("✓ wrote Node.js CJS adapter → index.js");
 
-  // 5. Node.js function config
+  // 4. Node.js function config
   await writeFile(
     resolve(FUNC, ".vc-config.json"),
     JSON.stringify(
@@ -102,7 +107,7 @@ async function run() {
   );
   console.log("✓ wrote .vc-config.json");
 
-  // 6. Vercel routing config
+  // 5. Vercel routing config
   const config = {
     version: 3,
     routes: [
