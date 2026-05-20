@@ -90,3 +90,46 @@ export const stats = {
   ratingLabel: "4,5 / 5 hvězdiček na Google",
   reviewLabel: "Více než 1 100 recenzí",
 };
+
+export const reviews = [
+  {
+    id: "review-1",
+    rating: 5,
+    text: "Výborná česká kuchyně, poctivé porce a příjemná obsluha. Svíčková byla naprosto skvělá, knedlíky domácí. Určitě se vrátíme!",
+    author: "Petra Nováková",
+    authorPhoto: null,
+    authorUri: null,
+    relativeTime: "před 2 týdny",
+    publishTime: "2026-05-06T12:00:00.000Z",
+  },
+  {
+    id: "review-2",
+    rating: 5,
+    text: "Nejlepší hospoda v okolí. Březňák výborně natočený, jídlo chutné a porce pořádné. Personál velmi přátelský. Doporučuji!",
+    author: "Tomáš Kovář",
+    authorPhoto: null,
+    authorUri: null,
+    relativeTime: "před měsícem",
+    publishTime: "2026-04-20T12:00:00.000Z",
+  },
+  {
+    id: "review-3",
+    rating: 5,
+    text: "Byli jsme tu na oslavu narozenin v salonku — vše perfektně zorganizované, jídlo výborné, obsluha pozorná. Skvělý zážitek pro celou rodinu.",
+    author: "Jana Horáčková",
+    authorPhoto: null,
+    authorUri: null,
+    relativeTime: "před 3 týdny",
+    publishTime: "2026-04-29T12:00:00.000Z",
+  },
+  {
+    id: "review-4",
+    rating: 4,
+    text: "Pravidelně tu chodíme na oběd. Denní menu za rozumnou cenu, porce opravdu vydatné. Kvalita jídla je tady stálá a vysoká.",
+    author: "Martin Blaha",
+    authorPhoto: null,
+    authorUri: null,
+    relativeTime: "před 2 měsíci",
+    publishTime: "2026-03-20T12:00:00.000Z",
+  },
+];

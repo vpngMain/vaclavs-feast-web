@@ -1,6 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import {
   Wifi,
   Users,
@@ -13,8 +11,7 @@ import {
   CigaretteOff,
   Clock,
 } from "lucide-react";
-import { photos, dishes, place, stats } from "@/data/place";
-import { getGoogleReviews } from "@/lib/reviews.functions";
+import { photos, dishes, place, stats, reviews } from "@/data/place";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -37,13 +34,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const fetchReviews = useServerFn(getGoogleReviews);
-  const { data: reviewsData, isLoading } = useQuery({
-    queryKey: ["google-reviews"],
-    queryFn: () => fetchReviews(),
-    staleTime: 1000 * 60 * 30,
-  });
-  const reviewSlots = Array.from({ length: 4 }, (_, i) => reviewsData?.reviews[i] ?? null);
+  const reviewSlots = Array.from({ length: 4 }, (_, i) => reviews[i] ?? null);
   return (
     <div>
       {/* HERO */}
@@ -245,11 +236,7 @@ function Index() {
               {stats.ratingLabel} · {stats.reviewLabel}
             </p>
           </div>
-          {isLoading && (
-            <p className="text-center text-sm text-primary-foreground/60">
-              Načítáme nejnovější recenze z Google…
-            </p>
-          )}
+
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {reviewSlots.map((r, index) => (
               <figure

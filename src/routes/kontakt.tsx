@@ -13,7 +13,7 @@ export const Route = createFileRoute("/kontakt")({
 });
 
 function KontaktPage() {
-  const embedSrc = `https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_KEY}&q=place_id:ChIJ1Y7NpCmQCUcRHzAsci1xVHI&language=cs`;
+  const embedSrc = `https://maps.google.com/maps?q=${place.lat},${place.lng}&z=17&output=embed`;
 
   return (
     <div>
